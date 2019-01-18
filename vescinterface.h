@@ -25,6 +25,8 @@
 #include <QByteArray>
 #include <QList>
 #include <QTcpSocket>
+#include <QSettings>
+#include <QHash>
 
 #ifdef HAS_SERIALPORT
 #include <QSerialPort>
@@ -34,13 +36,17 @@
 #include "configparams.h"
 #include "commands.h"
 #include "packet.h"
+
+#ifdef HAS_BLUETOOTH
 #include "bleuart.h"
+#endif
 
 class VescInterface : public QObject
 {
     Q_OBJECT
 public:
     explicit VescInterface(QObject *parent = 0);
+    ~VescInterface();
     Q_INVOKABLE Commands *commands() const;
     Q_INVOKABLE ConfigParams *mcConfig();
     Q_INVOKABLE ConfigParams *appConfig();
@@ -51,7 +57,12 @@ public:
     Q_INVOKABLE void emitStatusMessage(const QString &msg, bool isGood);
     Q_INVOKABLE void emitMessageDialog(const QString &title, const QString &msg, bool isGood, bool richText = false);
     Q_INVOKABLE bool fwRx();
+
+#ifdef HAS_BLUETOOTH
     Q_INVOKABLE BleUart* bleDevice();
+    Q_INVOKABLE void storeBleName(QString address, QString name);
+    Q_INVOKABLE QString getBleName(QString address);
+#endif
 
     // Connection
     Q_INVOKABLE bool isPortConnected();
@@ -89,7 +100,9 @@ private slots:
     void tcpInputDataAvailable();
     void tcpInputError(QAbstractSocket::SocketError socketError);
 
+#ifdef HAS_BLUETOOTH
     void bleDataRx(QByteArray data);
+#endif
 
     void timerSlot();
     void packetDataToSend(QByteArray &data);
@@ -107,6 +120,9 @@ private:
         CONN_TCP,
         CONN_BLE
     } conn_t;
+
+    QSettings mSettings;
+    QHash<QString, QString> mBleNames;
 
     ConfigParams *mMcConfig;
     ConfigParams *mAppConfig;
@@ -136,7 +152,10 @@ private:
     QString mLastTcpServer;
     int mLastTcpPort;
 
+#ifdef HAS_BLUETOOTH
     BleUart *mBleUart;
+#endif
+
     QString mLastBleAddr;
 
     bool mSendCanBefore = false;

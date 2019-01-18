@@ -1,5 +1,5 @@
 /*
-    Copyright 2017 Benjamin Vedder	benjamin@vedder.se
+    Copyright 2017 - 2018 Benjamin Vedder	benjamin@vedder.se
 
     This file is part of VESC Tool.
 
@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QNetworkReply>
 #include <QMessageBox>
+#include <QFile>
 
 #ifdef Q_OS_ANDROID
 #include <QtAndroid>
@@ -193,7 +194,7 @@ QString Utility::aboutText()
           #endif
               "&copy; Benjamin Vedder 2016 - 2018<br>"
               "<a href=\"mailto:benjamin@vedder.se\">benjamin@vedder.se</a><br>"
-              "<a href=\"http://vesc-project.com/\">http://vesc-project.com/</a>").
+              "<a href=\"https://vesc-project.com/\">https://vesc-project.com/</a>").
             arg(QString::number(VT_VERSION));
 }
 

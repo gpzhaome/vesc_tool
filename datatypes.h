@@ -94,6 +94,7 @@ struct MC_VALUES {
     Q_PROPERTY(int tachometer_abs MEMBER tachometer_abs)
     Q_PROPERTY(double position MEMBER position)
     Q_PROPERTY(mc_fault_code fault_code MEMBER fault_code)
+    Q_PROPERTY(uint8_t vesc_id MEMBER vesc_id)
     Q_PROPERTY(QString fault_str MEMBER fault_str)
 
 public:
@@ -114,6 +115,7 @@ public:
     int tachometer_abs;
     double position;
     mc_fault_code fault_code;
+    uint8_t vesc_id;
     QString fault_str;
 };
 
@@ -181,12 +183,22 @@ typedef struct {
     bool bt_z;
 } chuck_data;
 
-typedef struct {
+struct bldc_detect {
+    Q_GADGET
+
+    Q_PROPERTY(double cycle_int_limit MEMBER cycle_int_limit)
+    Q_PROPERTY(double bemf_coupling_k MEMBER bemf_coupling_k)
+    Q_PROPERTY(QVector<int> hall_table MEMBER hall_table)
+    Q_PROPERTY(int hall_res MEMBER hall_res)
+
+public:
     double cycle_int_limit;
     double bemf_coupling_k;
     QVector<int> hall_table;
     int hall_res;
-} bldc_detect;
+};
+
+Q_DECLARE_METATYPE(bldc_detect)
 
 typedef enum {
     NRF_PAIR_STARTED = 0,
